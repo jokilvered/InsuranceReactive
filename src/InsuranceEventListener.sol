@@ -24,12 +24,12 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
     // Callback constants
     uint64 private constant CALLBACK_GAS_LIMIT = 1000000;
 
-    // Chain IDs
     uint256 private constant ETHEREUM_CHAIN_ID = 1;
-    uint256 private constant ARBITRUM_CHAIN_ID = 42161;
-    uint256 private constant OPTIMISM_CHAIN_ID = 10;
+    uint256 private constant BINANCE_SMART_CHAIN_ID = 56;
+    uint256 private constant POLYGON_POS_CHAIN_ID = 137;
+    uint256 private constant AVALANCHE_C_CHAIN_ID = 43114;
     uint256 private constant BASE_CHAIN_ID = 8453;
-    uint256 private constant SEPOLIA_CHAIN_ID = 11155111; // For testing
+    uint256 private constant SEPOLIA_CHAIN_ID = 11155111;
 
     // Smart contract exploit detection parameters
     struct ExploitDetectionParams {
@@ -128,7 +128,7 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
         );
 
         service.subscribe(
-            ARBITRUM_CHAIN_ID,
+            BINANCE_SMART_CHAIN_ID,
             address(0),
             ERC20_TRANSFER_TOPIC_0,
             REACTIVE_IGNORE,
@@ -188,7 +188,7 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
         );
 
         subscriptions[1] = Subscription(
-            ARBITRUM_CHAIN_ID,
+            BINANCE_SMART_CHAIN_ID,
             address(0),
             ERC20_TRANSFER_TOPIC_0,
             REACTIVE_IGNORE,
