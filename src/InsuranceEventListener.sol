@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 
-import "../../../lib/reactive-lib/src/interfaces/IReactive.sol";
-import "../../../lib/reactive-lib/src/abstract-base/AbstractPausableReactive.sol";
+import "reactive-lib/interfaces/IReactive.sol";
+import "reactive-lib/abstract-base/AbstractPausableReactive.sol";
 
 /**
  * @title InsuranceEventListener
@@ -352,7 +352,7 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
         }
 
         // Extract transfer amount and check if it's a large transfer
-        uint256 amount = uint256(log.data);
+        uint256 amount = abi.decode(log.data, (uint256));
 
         if (amount >= exploitParams.largeTransferThreshold) {
             // Check for rapid transfers (potential exploit)
@@ -360,7 +360,7 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
                 .tokenTransferTimestamps[log._contract];
 
             // Add current timestamp
-            timestamps.push(log.block_timestamp);
+            timestamps.push(block.timestamp);
 
             // If we have enough transfer records, check for rapid transfers
             if (timestamps.length >= exploitParams.rapidTransferCount) {
@@ -369,10 +369,10 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
 
                 // If transfers happened within the window, signal an exploit
                 if (
-                    log.block_timestamp - timestamps[oldestRelevantIndex] <=
+                    block.timestamp - timestamps[oldestRelevantIndex] <=
                     exploitParams.rapidTransferWindow
                 ) {
-                    detectExploit(log._contract, log.block_timestamp);
+                    detectExploit(log._contract, block.timestamp);
                 }
 
                 // Cleanup old timestamps
@@ -393,16 +393,11 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
         if (!bridgeParams.monitoredBridges[log._contract]) {
             return;
         }
-
-        // This would contain logic to detect bridge failures
-        // For demonstration, we'll just check for specific patterns in the log data
-
-        // Example condition: if topic_3 contains a specific error code
         if (
             log.topic_3 ==
             0x0000000000000000000000000000000000000000000000000000000000000001
         ) {
-            detectBridgeFailure(log._contract, log.block_timestamp);
+            detectBridgeFailure(log._contract, block.timestamp);
         }
     }
 
@@ -412,16 +407,16 @@ contract InsuranceEventListener is IReactive, AbstractPausableReactive {
      */
     function processPriceUpdate(LogRecord calldata log) private {
         address token = address(uint160(log.topic_1));
-        uint256 price = uint256(log.data);
+        uint256 price = abi.decode(log.data, (uint256));
 
         // Check for stablecoin depegs
         if (monitoredStablecoins[token]) {
-            processStablecoinPrice(token, price, log.block_timestamp);
+            processStablecoinPrice(token, price, block.timestamp);
         }
 
         // Check for high volatility
         if (monitoredTokens[token]) {
-            processTokenVolatility(token, price, log.block_timestamp);
+            processTokenVolatility(token, price, block.timestamp);
         }
     }
 

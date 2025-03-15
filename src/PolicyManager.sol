@@ -3,8 +3,8 @@
 pragma solidity >=0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./interfaces/IInsurancePool.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./Interface.sol";
 
 /**
  * @title PolicyManager
@@ -82,7 +82,7 @@ contract PolicyManager is Ownable, ReentrancyGuard {
     }
 
     // Constructor
-    constructor() {
+    constructor() Ownable(msg.sender) {
         nextPolicyId = 1;
     }
 

@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.0;
 
-import "../../../lib/reactive-lib/src/abstract-base/AbstractCallback.sol";
-import "./interfaces/IPolicyManager.sol";
+import "reactive-lib/abstract-base/AbstractCallback.sol";
+import {IPolicyManager} from "./Interface.sol";
 
 /**
  * @title ClaimTrigger
@@ -30,6 +30,7 @@ contract ClaimTrigger is AbstractCallback {
         uint256 newPrice,
         uint256 indexed timestamp
     );
+    event Received(address indexed sender, uint256 amount);
 
     // State variables
     address public owner;
@@ -356,7 +357,9 @@ contract ClaimTrigger is AbstractCallback {
     /**
      * @dev Allows the contract to receive ETH
      */
-    receive() external payable {}
+    receive() external payable override {
+        emit Received(msg.sender, msg.value);
+    }
 }
 
 interface IERC20 {

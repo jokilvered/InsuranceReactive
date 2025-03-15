@@ -5,9 +5,9 @@ pragma solidity >=0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./interfaces/IRiskModel.sol";
-import "./interfaces/IPolicyManager.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IRiskModel} from "./Interface.sol";
+import {IPolicyManager} from "./Interface.sol";
 
 /**
  * @title InsurancePool
@@ -68,7 +68,7 @@ contract InsurancePool is Ownable, ReentrancyGuard {
         address _riskModel,
         address _policyManager,
         uint256 _protocolFee
-    ) {
+    ) Ownable(msg.sender) {
         riskModel = IRiskModel(_riskModel);
         policyManager = IPolicyManager(_policyManager);
         protocolFee = _protocolFee;

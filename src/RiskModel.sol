@@ -3,8 +3,7 @@
 pragma solidity >=0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IRiskModel.sol";
-import "./interfaces/IRiskDataCollector.sol";
+import "./Interface.sol";
 
 /**
  * @title RiskModel
@@ -80,7 +79,7 @@ contract RiskModel is IRiskModel, Ownable {
      * @dev Constructor
      * @param _riskDataCollector Address of the risk data collector
      */
-    constructor(address _riskDataCollector) {
+    constructor(address _riskDataCollector) Ownable(msg.sender) {
         if (_riskDataCollector != address(0)) {
             riskDataCollector = IRiskDataCollector(_riskDataCollector);
         }

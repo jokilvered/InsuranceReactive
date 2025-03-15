@@ -3,7 +3,7 @@
 pragma solidity >=0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IRiskDataCollector.sol";
+import "./Interface.sol";
 
 /**
  * @title RiskDataCollector
@@ -17,6 +17,12 @@ contract RiskDataCollector is IRiskDataCollector, Ownable {
         BridgeFailure,
         MarketVolatility
     }
+
+    constructor()
+        Ownable(
+            msg.sender // Set the initial owner to the deployer
+        )
+    {}
 
     // State variables
     mapping(address => mapping(uint8 => uint256)) private contractRiskScores;
